@@ -1,2 +1,2 @@
 #!/bin/bash
-find $1 -depth 1 -type file
+$work_dir ls
