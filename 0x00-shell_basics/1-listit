@@ -1,2 +1,2 @@
 #!/bin/bash
-la
+find $1 -depth 1 -type file
