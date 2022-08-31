@@ -1,2 +1,2 @@
 #!/bin/bash
-$work_dir ls
+ls
