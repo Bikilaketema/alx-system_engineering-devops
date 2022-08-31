@@ -1,2 +1,2 @@
 #!/bin/bash
-find ${dir} -maxdepth 1 -type f
+echo ls
