@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -la 0x00-shell_basics alx-systems_engineering-devops boot
+ls -R
