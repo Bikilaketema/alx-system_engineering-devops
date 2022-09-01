@@ -1,2 +1,2 @@
 #!/bin/bash
-chmod -R a-x,u=rwX,go=rX .
+find . -type d -exec chmod 775 {} +
