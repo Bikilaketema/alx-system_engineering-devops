@@ -32,7 +32,7 @@ the application; A replica node is a copy of the primary node, they provide redu
 copies of the application codebase to protect against hardware failure and increase
 capacity to serve read requests like searching or retrieving a document.
 
-Issues
+#Issues
 
 SPOF (Single Point Of Failure); The major single point of failure in this infrastructure is
 having only one load balancer.
