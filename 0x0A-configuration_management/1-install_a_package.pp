@@ -8,8 +8,8 @@ package { 'python3-pip':
 }
 
 exec { 'install-flask':
-  command => '/usr/bin/pip3 install flask==2.1.0',
   path    => ['/usr/bin'],
+  command => 'pip3 install flask==2.1.0',
   unless  => '/usr/bin/pip3 freeze | /bin/grep -w flask==2.1.0',
   require => [Package['python3-pip'], Class['::python']],
 }
