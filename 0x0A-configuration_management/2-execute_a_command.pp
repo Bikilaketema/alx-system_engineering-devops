@@ -1,4 +1,4 @@
-#Kill the process menow
+#Kill-the-process-menow
 exec { 'pkill':
   command => 'pkill -9 -f killmenow',
   path    => ['/usr/bin', '/usr/sbin', '/bin']
