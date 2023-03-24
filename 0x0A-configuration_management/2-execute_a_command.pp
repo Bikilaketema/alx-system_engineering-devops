@@ -1,9 +1,6 @@
 #Kill the process menow
 exec { 'killmenow':
-  command     => 'pkill -f killmenow',
-  path        => ['/bin', '/usr/bin'],
-  onlyif      => 'pgrep -f killmenow',
-  logoutput   => true,
-  refreshonly => true,
+  command => 'pkill -f killmenow',
+  onlyif  => 'pgrep -f killmenow',
 }
 
