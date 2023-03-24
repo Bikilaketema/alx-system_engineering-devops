@@ -1,4 +1,4 @@
-#Creates a file in /tmp/school with the ff parameters
+#Createsafile
 file { '/tmp/school':
   ensure  => file,
   path    => '/tmp/school',
