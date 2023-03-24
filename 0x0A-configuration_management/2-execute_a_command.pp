@@ -1,5 +1,5 @@
 #Kill the process menow
-exec { 'kill-killmenow':
+exec { 'killmenow':
   command => 'pkill -f killmenow'
 }
 
