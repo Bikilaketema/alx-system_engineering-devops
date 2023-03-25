@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 #ThisscriptconnectsmetomealxRemoteserver
-ssh ubuntu@67.202.47.52
+ssh -i ~/.ssh/school ubuntu@67.202.47.52
 
