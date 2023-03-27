@@ -32,6 +32,6 @@ cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.b
 echo -e "Hello World!" | dd status=none of=/var/www/html/index.nginx-debian.html
 
 # Restarting nginx
-sudo service nginx restart
+sudo systemctl nginx restart
 
 echo -e "\n${green}Completed.${reset} ✅\n"
