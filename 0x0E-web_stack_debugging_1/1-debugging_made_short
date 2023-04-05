@@ -1,0 +1,6 @@
+#!/bin/bash
+sudo mkdir -p /var/www/html
+sudo echo "<html><head><title>My Website</title></head><body><h1>Welcome to my website!</h1></body></html>" > /var/www/html/index.html
+sudo sed -i "s/8080/80/" /etc/nginx/sites-enabled/default
+sudo service nginx restart
+

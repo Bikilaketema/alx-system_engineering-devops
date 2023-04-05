@@ -1,0 +1,18 @@
+#!/bin/bash
+# Create the /var/www directory if it does not already exist
+sudo mkdir -p /var/www/html
+
+# Set ownership of the directory to the www-data user and group
+sudo chown -R www-data:www-data /var/www/html
+
+# Create a new HTML file called index.html in the /var/www directory
+sudo echo "<!DOCTYPE html><html><head><title>Welcome to nginx!</title><style>body {width: 35em;margin: 0 auto;font-family: Tahoma, Verdana, Arial, sans-serif;}</style></head><body><h1>Welcome to nginx!</h1><p>If you see this page, the nginx web server is successfully installed and working. Further configuration is required.</p><p>For online documentation and support please refer to<a href="http://nginx.org/">nginx.org</a>.<br/>Commercial support is available at<a href="http://nginx.com/">nginx.com</a>.</p><p><em>Thank you for using nginx.</em></p></body></html>
+" > /var/www/html/index.html
+
+# Set permissions of the index.html file to allow the web server to read it
+sudo chmod 644 /var/www/html/index.html
+
+sudo sed -i "s/8080/80/" /etc/nginx/sites-enabled/default
+
+sudo service nginx restart
+
