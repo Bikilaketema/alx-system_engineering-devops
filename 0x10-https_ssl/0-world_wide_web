@@ -1,30 +1,29 @@
 #!/usr/bin/env bash
-# Displays informtation about subdomains.
 # Declare variables and parameters
-declare -a subdomains=("www" "lb-01" "web-01" "web-02")
-domain="$1"
-sub="$2"
+subdomains=( "www" "lb-01" "web-01" "web-02" )
+maindomain="$1"
+subdomain="$2"
 
-# Define function to get DNS information using dig
-get_dns_info() {
-    # Get function variables
-    sub="$1"
-    INFO="$(dig "$sub.$domain" | awk '/ANSWER SECTION:/,0' | tail -n +2 | head -n 1)"
-    IP=$(echo "$INFO" | awk '{print $5}')
-    RECORD=$(echo "$INFO" | awk '{print $4}')
+# Function to retrieve and display DNS information for a subdomain
+dig_cmd () {
+        # Get DNS information for the specified subdomain
+        sub="$2"
+        INFO="$(dig "$sub.$maindomain" | grep -A1 'ANSWER SECTION:' | awk 'NR==2')"
+        IP=$(echo "$INFO" | awk '{print $5}')
+        RECORD=$(echo "$INFO" | awk '{print $4}')
 
-    # Print the DNS information
-    echo -e "The subdomain \e[34m$sub\e[0m is a \e[34m$RECORD\e[0m record and points to \e[34m$IP\e[0m"
+        # Display the DNS information for the specified subdomain
+        echo "The subdomain $sub is a $RECORD record and points to $IP"
 }
 
 # Check the number of arguments passed to the script
 if [ $# -eq 1 ]; then
-    # Display information for all subdomains
-    for sub in "${subdomains[@]}"; do
-        get_dns_info "$sub"
-    done
+        # If only the domain name is provided, display DNS information for all subdomains
+        for subs in "${subdomains[@]}"; do
+                dig_cmd "$maindomain" "$subs"
+        done
 elif [ $# -eq 2 ]; then
-    # Display information for the specified subdomain
-    get_dns_info "$sub"
+        # If a specific subdomain is provided, display DNS information for that subdomain only
+        dig_cmd "$maindomain" "$subdomain"
 fi
 
