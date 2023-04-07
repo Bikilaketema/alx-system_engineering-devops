@@ -1,29 +1,31 @@
 #!/usr/bin/env bash
-# Declare variables and parameters
-subdomains=( "www" "lb-01" "web-01" "web-02" )
-maindomain="$1"
-subdomain="$2"
+#!/bin/bash
+# Script to display information about a domain and its subdomains
 
-# Function to retrieve and display DNS information for a subdomain
-dig_cmd () {
-        # Get DNS information for the specified subdomain
-        sub="$2"
-        INFO="$(dig "$sub.$maindomain" | grep -A1 'ANSWER SECTION:' | awk 'NR==2')"
-        IP=$(echo "$INFO" | awk '{print $5}')
-        RECORD=$(echo "$INFO" | awk '{print $4}')
+# Check that domain argument is provided
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <domain> [subdomain]"
+    exit 1
+fi
 
-        # Display the DNS information for the specified subdomain
-        echo "The subdomain $sub is a $RECORD record and points to $IP"
-}
+# Assign variables
+domain=$1
+subdomain=$2
 
-# Check the number of arguments passed to the script
-if [ $# -eq 1 ]; then
-        # If only the domain name is provided, display DNS information for all subdomains
-        for subs in "${subdomains[@]}"; do
-                dig_cmd "$maindomain" "$subs"
-        done
-elif [ $# -eq 2 ]; then
-        # If a specific subdomain is provided, display DNS information for that subdomain only
-        dig_cmd "$maindomain" "$subdomain"
+# Display domain information
+echo "Domain: $domain"
+echo "IP Address: $(dig +short $domain)"
+echo ""
+
+# Display subdomain information
+if [ "$subdomain" != "" ]; then
+    echo "Subdomain: $subdomain.$domain"
+    echo "IP Address: $(dig +short $subdomain.$domain)"
+else
+    echo "Subdomains:"
+    echo "www.$domain: $(dig +short www.$domain)"
+    echo "lb-01.$domain: $(dig +short lb-01.$domain)"
+    echo "web-01.$domain: $(dig +short web-01.$domain)"
+    echo "web-02.$domain: $(dig +short web-02.$domain)"
 fi
 
