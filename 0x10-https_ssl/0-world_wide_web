@@ -6,7 +6,7 @@ subdomains=( "www" "lb-01" "web-01" "web-02" )
 domain="$1"
 subdomain="$2"
 
-dig_cmd () {
+dig_ip_config() {
 	# func variables
 	subdomain="$2"
 	INFO="$(dig "$subdomain.$domain" | grep -A1 'ANSWER SECTION:' | awk 'NR==2')"
