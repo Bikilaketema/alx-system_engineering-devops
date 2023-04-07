@@ -2,18 +2,19 @@
 #!/bin/bash
 # Script to display information about a domain and its subdomains
 
+# variables & parameters
 subdomains=( "www" "lb-01" "web-01" "web-02" )
 domain="$1"
-subdomain="$2"
+sub="$2"
 
-dig_ip_config() {
+dig_cmd () {
 	# func variables
-	subdomain="$2"
-	INFO="$(dig "$subdomain.$domain" | grep -A1 'ANSWER SECTION:' | awk 'NR==2')"
+	sub="$2"
+	INFO="$(dig "$sub.$domain" | grep -A1 'ANSWER SECTION:' | awk 'NR==2')"
 	IP=$(echo "$INFO" | awk '{print $5}')
 	RECORD=$(echo "$INFO" | awk '{print $4}')
 
-	echo -e "The subdomain $subdomain is a $RECORD record and points to $IP"
+	echo -e "${brown}The subdomain ${blue}$sub${brown} is a ${blue}$RECORD${brown} record and points to ${blue}$IP${reset}"
 }
 
 if [ $# -eq 1 ]; then
@@ -21,5 +22,5 @@ if [ $# -eq 1 ]; then
 		dig_cmd "$domain" "$subs"
 	done
 elif [ $# -eq 2 ]; then
-	dig_cmd "$domain" "$subdomain"
+	dig_cmd "$domain" "$sub"
 fi
