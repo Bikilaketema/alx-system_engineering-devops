@@ -2,30 +2,24 @@
 #!/bin/bash
 # Script to display information about a domain and its subdomains
 
-# Check that domain argument is provided
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 <domain> [subdomain]"
-    exit 1
+subdomains=( "www" "lb-01" "web-01" "web-02" )
+domain="$1"
+subdomain="$2"
+
+dig_cmd () {
+	# func variables
+	subdomain="$2"
+	INFO="$(dig "$subdomain.$domain" | grep -A1 'ANSWER SECTION:' | awk 'NR==2')"
+	IP=$(echo "$INFO" | awk '{print $5}')
+	RECORD=$(echo "$INFO" | awk '{print $4}')
+
+	echo -e "The subdomain $subdomain is a $RECORD record and points to $IP"
+}
+
+if [ $# -eq 1 ]; then
+	for subs in "${subdomains[@]}"; do
+		dig_cmd "$domain" "$subs"
+	done
+elif [ $# -eq 2 ]; then
+	dig_cmd "$domain" "$subdomain"
 fi
-
-# Assign variables
-domain=$1
-subdomain=$2
-
-# Display domain information
-echo "Domain: $domain"
-echo "IP Address: $(dig +short $domain)"
-echo ""
-
-# Display subdomain information
-if [ "$subdomain" != "" ]; then
-    echo "Subdomain: $subdomain.$domain"
-    echo "IP Address: $(dig +short $subdomain.$domain)"
-else
-    echo "Subdomains:"
-    echo "www.$domain: $(dig +short www.$domain)"
-    echo "lb-01.$domain: $(dig +short lb-01.$domain)"
-    echo "web-01.$domain: $(dig +short web-01.$domain)"
-    echo "web-02.$domain: $(dig +short web-02.$domain)"
-fi
-
