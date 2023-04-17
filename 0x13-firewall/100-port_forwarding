@@ -16,10 +16,10 @@
 :ufw-not-local - [0:0]
 # End required lines
 
-#Allow port forwarding fro 8080 to 80
+#Allow port forwarding fro 80 to 8080
 *nat
 :PREROUTING ACCEPT [0:0]
--A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
+-A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
 COMMIT
 
 # allow all on loopback
