@@ -2,4 +2,5 @@
 #Shorter version of '1-run_nginx_as_nginx'
 sed -i "s/#user www-data/user nginx/" /etc/nginx/nginx.conf
 sed -i "s/80/8080/g" /etc/nginx/sites-available/default
-su nginx -s /bin/bash -c 'service nginx restart'
+chmod 644 /etc/nginx/nginx.conf
+sudo -u nginx service nginx start
