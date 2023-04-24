@@ -15,7 +15,8 @@ if __name__ == "__main__":
     user_response = requests.get(user_url)
     user_data = user_response.json()
     # Get user's todo list
-    todo_url = "https://jsonplaceholder.typicode.com/todos?userId={}".format(user_id)
+    todo_url = "https://jsonplaceholder.typicode.com/todos?userId={}"
+    .format(user_id)
     todo_response = requests.get(todo_url)
     todo_data = todo_response.json()
     # Export data to CSV file
@@ -25,7 +26,7 @@ if __name__ == "__main__":
         for todo in todo_data:
             task_completed_status = str(todo['completed'])
             task_title = todo['title']
-            writer.writerow([user_id, user_data['username'], task_completed_status, task_title])
+            writer.writerow([user_id, user_data['username'],
+                            task_completed_status, task_title])
     # Print feedback message
     print("Number of tasks in CSV: OK")
-
