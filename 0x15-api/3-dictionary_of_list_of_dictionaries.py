@@ -5,28 +5,28 @@ Export data from the JSONPlaceholder API to JSON format.
 
 import json
 import requests
-import sys
+
+
+API = "https://jsonplaceholder.typicode.com"
+"""REST API url"""
+
 
 if __name__ == '__main__':
-    api_url = 'https://jsonplaceholder.typicode.com'
-    users = requests.get(api_url + '/users').json()
-    tasks = requests.get(api_url + '/todos').json()
-
-    # Create dictionary to store tasks for each user
-    user_tasks = {}
-    for user in users:
-        user_id = user['id']
-        user_name = user['username']
-        user_tasks[user_id] = []
-        for task in tasks:
-            if task['userId'] == user_id:
-                task_dict = {
-                    'username': user_name,
-                    'task': task['title'],
-                    'completed': task['completed']
-                }
-                user_tasks[user_id].append(task_dict)
-
-    # Write data to file in JSON format
-    with open('todo_all_employees.json', mode='w') as file:
-        json.dump(user_tasks, file)
+    users_res = requests.get('{}/users'.format(API)).json()
+    todos_res = requests.get('{}/todos'.format(API)).json()
+    users_data = {}
+    for user in users_res:
+        id = user.get('id')
+        user_name = user.get('username')
+        todos = list(filter(lambda x: x.get('userId') == id, todos_res))
+        user_data = list(map(
+            lambda x: {
+                'username': user_name,
+                'task': x.get('title'),
+                'completed': x.get('completed')
+            },
+            todos
+        ))
+        users_data['{}'.format(id)] = user_data
+    with open('todo_all_employees.json', 'w') as file:
+        json.dump(users_data, file)
