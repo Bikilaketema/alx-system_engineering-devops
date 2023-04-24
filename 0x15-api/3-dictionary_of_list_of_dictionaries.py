@@ -29,18 +29,18 @@ def export_all_to_json():
         user_name = user['username']
         tasks_by_user[user_id] = []
 
-        # populate the dictionary with tasks for this user
-        for task in tasks:
-            if task['userId'] == user_id:
-                task_dict = {}
-                task_dict['username'] = user_name
-                task_dict['task'] = task['title']
-                task_dict['completed'] = task['completed']
-                tasks_by_user[user_id].append(task_dict)
+    # populate the dictionary with tasks for all users
+    for task in tasks:
+        user_id = task['userId']
+        task_dict = {}
+        task_dict['username'] = [user['username'] for user in users if user['id'] == user_id][0]
+        task_dict['task'] = task['title']
+        task_dict['completed'] = task['completed']
+        tasks_by_user[user_id].append(task_dict)
 
     # write the dictionary to a JSON file
     with open("todo_all_employees.json", 'w') as file:
-        json.dump(tasks_by_user, file, indent=4)
+        json.dump(tasks_by_user, file)
 
 
 if __name__ == '__main__':
