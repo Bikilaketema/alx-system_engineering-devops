@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
-This module defines a function that retrieves all tasks from the given
-REST API endpoint and exports them to a JSON file.
+This module contains a script that generates a JSON file
+containing a list of dictionaries of tasks for all employees.
 """
 
 import json
@@ -9,39 +9,27 @@ import requests
 from sys import argv
 
 
-def export_all_to_json():
-    """Exports all tasks from the given REST API endpoint to a JSON file."""
-    url = 'https://jsonplaceholder.typicode.com/todos/'
-    users_url = 'https://jsonplaceholder.typicode.com/users/'
-
-    tasks = requests.get(url).json()
-    users = requests.get(users_url).json()
-
-    if not tasks:
-        print("No tasks found")
-        return
-
-    # create a dictionary to hold tasks for all users
-    tasks_by_user = {}
+if __name__ == "__main__":
+    user_dict = {}
+    url = "https://jsonplaceholder.typicode.com/users"
+    response = requests.get(url)
+    users = json.loads(response.text)
 
     for user in users:
-        user_id = user['id']
-        user_name = user['username']
-        tasks_by_user[user_id] = []
+        user_id = user.get("id")
+        username = user.get("username")
+        user_dict[user_id] = []
 
-        # populate the dictionary with tasks for this user
+        url = f"https://jsonplaceholder.typicode.com/todos?userId={user_id}"
+        response = requests.get(url)
+        tasks = json.loads(response.text)
+
         for task in tasks:
-            if task['userId'] == user_id:
-                task_dict = {}
-                task_dict['username'] = user_name
-                task_dict['task'] = task['title']
-                task_dict['completed'] = task['completed']
-                tasks_by_user[user_id].append(task_dict)
+            task_dict = {"username": username,
+                         "task": task.get("title"),
+                         "completed": task.get("completed")}
+            user_dict[user_id].append(task_dict)
 
-    # write the dictionary to a JSON file
-    with open("todo_all_employees.json", 'w') as file:
-        json.dump(tasks_by_user, file)
-
-
-if __name__ == '__main__':
-    export_all_to_json()
+    with open("todo_all_employees.json", mode="w") as f:
+        json.dump(user_dict, f)
+    print("All users found: OK")
