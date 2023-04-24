@@ -1,32 +1,31 @@
 #!/usr/bin/python3
 """
-Export data from the JSONPlaceholder API to JSON format.
+export data in JSON format
+Records all tasks from all employees
 """
+if __name__ == "__main__":
+    import json
+    import requests
 
-import json
-import requests
-import sys
+    FILENAME = 'todo_all_employees.json'
+    URL_FOR_USERS = 'https://jsonplaceholder.typicode.com/users'
+    URL_FOR_TODOS = 'https://jsonplaceholder.typicode.com/todos'
 
-if __name__ == '__main__':
-    api_url = 'https://jsonplaceholder.typicode.com'
-    users = requests.get(api_url + '/users').json()
-    tasks = requests.get(api_url + '/todos').json()
+    r_for_users = requests.get(URL_FOR_USERS)
+    r_for_todos = requests.get(URL_FOR_TODOS)
 
-    # Create dictionary to store tasks for each user
-    user_tasks = {}
+    users = r_for_users.json()
+    todos = r_for_todos.json()
+    todo_all_employees = {}
+
     for user in users:
-        user_id = user['id']
-        user_name = user['username']
-        user_tasks[user_id] = []
-        for task in tasks:
-            if task['userId'] == user_id:
-                task_dict = {
-                    'username': user_name,
-                    'task': task['title'],
-                    'completed': task['completed']
-                }
-                user_tasks[user_id].append(task_dict)
-
-    # Write data to file in JSON format
-    with open('todo_all_employees.json', mode='w') as file:
-        json.dump(user_tasks, file)
+        todos_list = []
+        for todo in todos:
+            if todo.get("userId") == user.get("id"):
+                my_dict = {"username": user.get("username"),
+                           "task": todo.get("title"),
+                           "completed": todo.get("completed")}
+                todos_list.append(my_dict)
+        todo_all_employees[user.get("id")] = todos_list
+    with open(FILENAME, 'w+') as f:
+        json.dump(todo_all_employees, f)
