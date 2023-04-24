@@ -40,7 +40,7 @@ def export_all_to_json():
 
     # write the dictionary to a JSON file
     with open("todo_all_employees.json", 'w') as file:
-        json.dump(tasks_by_user, file)
+        json.dump(tasks_by_user, file, indent=4)
 
 
 if __name__ == '__main__':
