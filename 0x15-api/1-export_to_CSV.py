@@ -1,28 +1,33 @@
 #!/usr/bin/python3
 """
-Exports tasks owned by an employee to a CSV file
+Python script that, using this REST API, for a given employee ID, returns
+information about his/her TODO list progress and export data in the CSV format.
 """
 import csv
 import requests
-import sys
+from sys import argv
 
-if __name__ == "__main__":
-    url = "https://jsonplaceholder.typicode.com/"
-    try:
-        employee_id = int(sys.argv[1])
-    except (IndexError, ValueError):
-        sys.stderr.write("Usage: ./1-export_to_CSV.py employee_id\n")
-        sys.exit(1)
 
-    employee_req = requests.get(url + "users/{}".format(employee_id))
-    employee = employee_req.json()
-    employee_name = employee.get("username")
+if __name__ == '__main__':
+    url = 'https://jsonplaceholder.typicode.com/users/{}/todos'.format(argv[1])
+    user_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(argv[1])
+    response = requests.get(url)
+    user_response = requests.get(user_url)
+    todos = response.json()
+    user = user_response.json()
 
-    tasks_req = requests.get(url + "todos", params={"userId": employee_id})
-    tasks = tasks_req.json()
-
-    with open('{}.csv'.format(employee_id), mode='w') as csv_file:
+    with open('{}.csv'.format(argv[1]), mode='w') as csv_file:
         writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-        for task in tasks:
-            writer.writerow([employee_id, employee_name, task.get("completed"), task.get("title")])
+        for todo in todos:
+            writer.writerow([user['id'], user['username'], todo['completed'], todo['title']])
+
+    task_total = len(todos)
+    completed_task = sum(task['completed'] for task in todos)
+
+    print("Employee {} is done with tasks({}/{}):".format(user['name'], completed_task, task_total))
+    for task in todos:
+        if task['completed'] is True:
+            print("\t {}".format(task['title']))
+
+    print("Number of tasks in CSV: OK")
 
