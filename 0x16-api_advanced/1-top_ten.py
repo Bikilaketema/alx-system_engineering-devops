@@ -10,7 +10,8 @@ import requests
 def top_ten(subreddit):
     """Prints the titles of the first 10 hot posts for a given subreddit."""
     url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=10"
-    headers = {"User-Agent": "0x16-api_advanced: pro: \}
+    headers = {"User-Agent": '0x16-api_advanced:project:\
+v1.0.0 (by /b/bicky)'}
     params = {
 
          "limit": 10
@@ -24,6 +25,5 @@ def top_ten(subreddit):
         print(None)
         return
 
-    data = response.json()
-    for post in data["data"]["children"]:
-        print(post["data"]["title"])
+    results = response.json().get("data")
+    [print(c.get("data").get("title")) for c in results.get("children")]
