@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
-Queries the Reddit API and returns the
-number of subscribers for a given subreddit.
+Queries the Reddit API and returns the number
+of subscribers for a given subreddit.
 """
 
 import requests
@@ -9,12 +9,10 @@ import requests
 
 def number_of_subscribers(subreddit):
     """Retrieves the number of subscribers for a given subreddit."""
-    url = f"https://www.reddit.com/r/{subreddit}/about.json"
-    headers = {"User-Agent": "myBot/0.0.1"}
-    response = requests.get(url, headers=headers, allow_redirects=False)
-
-    if response.status_code == 404:
+    if subreddit is None or type(subreddit) is not str:
         return 0
-
-    data = response.json()
-    return data["data"]["subscribers"]
+    url = requests.get('http://www.reddit.com/r/{}/about.json'.format(subreddit),
+                     headers={'User-Agent': '0x16-api_advanced:project:\
+v1.0.0 (by /b/bicky)'}).json()
+    subs = r.get("data", {}).get("subscribers", 0)
+    return subs
