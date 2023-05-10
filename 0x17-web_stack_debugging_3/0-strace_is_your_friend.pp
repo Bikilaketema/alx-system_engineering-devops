@@ -1,23 +1,10 @@
-file { '/var/www/html/wp-settings.php':
-  ensure => 'file',
-  replace => 'true',
-  content => template('my_module/wp-settings.erb'),
+# Puppet manifest to fix a 500 error in WordPress by replacing 'phpp' with 'php' in wp-settings.php file.
+
+# This manifest uses an 'exec' resource to run the 'sed' command with the specified options. 
+# The 'command' parameter specifies the command to be executed, which replaces all occurrences of 'phpp' with 'php' in the wp-settings.php file. 
+# The 'path' parameter specifies the location of the sed command.
+
+exec { 'fixed-phpp':
+  command => "sed -i 's/phpp/php/g' /var/www/html/wp-settings.php",
+  path    => '/bin';
 }
-
-class my_module {
-  # Define a template with the contents of the wp-settings.php file, with the "phpp" string replaced with "php"
-  file { '/etc/puppetlabs/code/environments/production/modules/my_module/templates/wp-settings.erb':
-    ensure  => 'file',
-    content => "# Contents of wp-settings.php file with 'phpp' replaced with 'php'\n<?php\n// ...\n",
-    source  => 'puppet:///modules/my_module/wp-settings.erb',
-  }
-
-  # Restart Apache after the wp-settings.php file has been updated
-  service { 'httpd':
-    ensure     => 'running',
-    enable     => 'true',
-    subscribe  => File['/var/www/html/wp-settings.php'],
-  }
-}
-
-include my_module
